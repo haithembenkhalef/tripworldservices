@@ -1,5 +1,6 @@
 package com.tripworld.amenties;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tripworld.amenties.hotel.HotelAmenity;
 import com.tripworld.amenties.room.RoomAmenity;
 import lombok.*;
@@ -35,9 +36,11 @@ public class Amenity {
     private String shortDesc;
 
     @OneToMany(mappedBy = "amenity")
+    @JsonIgnore
     List<HotelAmenity> hotelAmenities;
 
     @OneToMany(mappedBy = "amenity")
+    @JsonIgnore
     List<RoomAmenity> roomAmenities;
 
 

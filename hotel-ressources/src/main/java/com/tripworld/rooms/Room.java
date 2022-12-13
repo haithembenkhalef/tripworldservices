@@ -38,9 +38,11 @@ public class Room {
     @ManyToOne
     @JoinColumn(name="hotel_id")
     @NotNull
+    @JsonIgnore
     private Hotel hotel;
 
     @OneToMany(mappedBy = "amenity")
+    @JsonIgnore
     List<RoomAmenity> Amenities;
 
 
