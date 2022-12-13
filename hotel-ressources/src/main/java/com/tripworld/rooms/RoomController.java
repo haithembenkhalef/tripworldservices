@@ -1,21 +1,18 @@
 package com.tripworld.rooms;
 
 
-import com.tripworld.Utility;
-import com.tripworld.amenties.Amenity;
-import com.tripworld.amenties.AmenityRegistrationRequest;
+import com.tripworld.utility.Utility;
+import com.tripworld.amenities.Amenity;
+import com.tripworld.amenities.AmenityRegistrationRequest;
 import com.tripworld.amenties.AmenityService;
-import com.tripworld.amenties.hotel.HotelAmenityRegistrationRequest;
-import com.tripworld.amenties.room.RoomAmenityRegistrationRequest;
+import com.tripworld.amenities.room.RoomAmenityRegistrationRequest;
 import com.tripworld.amenties.room.RoomAmenityService;
-import com.tripworld.hotels.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController

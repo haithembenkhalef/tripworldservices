@@ -1,6 +1,9 @@
 package com.tripworld.amenties.hotel;
 
 
+import com.tripworld.amenities.hotel.HotelAmenity;
+import com.tripworld.amenities.hotel.HotelAmenityRegistrationRequest;
+import com.tripworld.amenities.hotel.HotelAmenityRepository;
 import com.tripworld.amenties.AmenityService;
 import com.tripworld.exceptions.NoRecordFoundException;
 import com.tripworld.hotels.HotelService;

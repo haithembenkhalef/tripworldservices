@@ -1,12 +1,11 @@
 package com.tripworld.amenties.room;
 
 
+import com.tripworld.amenities.room.RoomAmenity;
+import com.tripworld.amenities.room.RoomAmenityRegistrationRequest;
+import com.tripworld.amenities.room.RoomAmenityRepository;
 import com.tripworld.amenties.AmenityService;
-import com.tripworld.amenties.hotel.HotelAmenity;
-import com.tripworld.amenties.hotel.HotelAmenityRegistrationRequest;
-import com.tripworld.amenties.hotel.HotelAmenityRepository;
 import com.tripworld.exceptions.NoRecordFoundException;
-import com.tripworld.hotels.HotelService;
 import com.tripworld.rooms.RoomService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

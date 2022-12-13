@@ -1,7 +1,7 @@
 package com.tripworld.rooms;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tripworld.amenties.room.RoomAmenity;
+import com.tripworld.amenities.room.RoomAmenity;
 import com.tripworld.hotels.Hotel;
 import lombok.*;
 

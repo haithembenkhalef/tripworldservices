@@ -1,7 +1,6 @@
 package com.tripworld.hotels;
 
 
-import com.tripworld.amenties.Amenity;
 import com.tripworld.exceptions.NoRecordFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +61,14 @@ public class HotelService {
         hotelRepository.deleteById(id);
     }
 
+
+    public List<Hotel> findByName(String name){
+        return this.hotelRepository.findByHotelName(name);
+    }
+
+    public List<Hotel> findByCityCode(String cityCode){
+        return this.hotelRepository.findHotelByCityCode(cityCode);
+    }
 
 
 }

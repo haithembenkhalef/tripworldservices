@@ -1,10 +1,10 @@
 package com.tripworld.hotels;
 
-import com.tripworld.Utility;
-import com.tripworld.amenties.Amenity;
-import com.tripworld.amenties.AmenityRegistrationRequest;
+import com.tripworld.utility.Utility;
+import com.tripworld.amenities.Amenity;
+import com.tripworld.amenities.AmenityRegistrationRequest;
 import com.tripworld.amenties.AmenityService;
-import com.tripworld.amenties.hotel.HotelAmenityRegistrationRequest;
+import com.tripworld.amenities.hotel.HotelAmenityRegistrationRequest;
 import com.tripworld.amenties.hotel.HotelAmenityService;
 import com.tripworld.rooms.Room;
 import com.tripworld.rooms.RoomRegistrationRequest;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -69,6 +68,16 @@ public class HotelController {
         return ResponseEntity.ok(hotel.getHotelAmenities().stream()
                 .filter(hotelAmenity -> hotelAmenity.getAmenity().getAmenityId().equals(amenityId))
                 .collect(Utility.toSingleton()));
+    }
+
+    @GetMapping("/search/findHotelByName/{name}")
+    ResponseEntity<?> getHotelByName(@PathVariable String name) {
+        return ResponseEntity.ok(hotelService.findByName(name));
+    }
+
+    @GetMapping("/search/findHotelByCityCode/{cityCode}")
+    ResponseEntity<?> getHotelByCityCode(@PathVariable String cityCode) {
+        return ResponseEntity.ok(hotelService.findByCityCode(cityCode));
     }
 
     @PostMapping

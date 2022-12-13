@@ -1,14 +1,11 @@
 package com.tripworld.amenties;
 
 
-import com.tripworld.hotels.Hotel;
-import com.tripworld.hotels.HotelRegistrationRequest;
+import com.tripworld.amenities.AmenityRegistrationRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -23,6 +20,10 @@ public class AmenityController {
         return ResponseEntity.ok(amenityService.findAll());
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<?> getAmenitiesById(Long id) {
+        return ResponseEntity.ok(amenityService.findById(id));
+    }
     @PostMapping
     public ResponseEntity<?> registerAmenity(@RequestBody AmenityRegistrationRequest amenityRegistrationRequest) {
       return ResponseEntity.ok(amenityService.registerAmenity(amenityRegistrationRequest));

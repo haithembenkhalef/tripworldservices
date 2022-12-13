@@ -13,7 +13,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
-/** Represents an Assembler utility for building links manually if needed.
+/** Represents an Assembler utility
+ * for building links manually if needed.
  * @version 1.0
  * @since 1.0
  */

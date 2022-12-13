@@ -1,19 +1,13 @@
 package com.tripworld.rooms;
 
 
-import com.tripworld.amenties.Amenity;
 import com.tripworld.exceptions.NoRecordFoundException;
-import com.tripworld.hotels.Hotel;
-import com.tripworld.hotels.HotelRegistrationRequest;
-import com.tripworld.hotels.HotelRepository;
 import com.tripworld.hotels.HotelService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
