@@ -1,28 +1,20 @@
 package com.tripworld.hotels;
 
 import com.tripworld.amenties.Amenity;
+import com.tripworld.amenties.AmenityRegistrationRequest;
+import com.tripworld.amenties.AmenityService;
+import com.tripworld.amenties.hotel.HotelAmenityRegistrationRequest;
+import com.tripworld.amenties.hotel.HotelAmenityService;
 import com.tripworld.rooms.Room;
 import com.tripworld.rooms.RoomRegistrationRequest;
-import com.tripworld.rooms.RoomRepository;
 import com.tripworld.rooms.RoomService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.server.core.EmbeddedWrapper;
-import org.springframework.hateoas.server.core.EmbeddedWrappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
 @RestController
@@ -34,9 +26,12 @@ public class HotelController {
 
     private final RoomService roomService;
 
+    private final AmenityService amenityService;
+
+    private final HotelAmenityService hotelAmenityService;
+
     @GetMapping
     public ResponseEntity<?> getHotels(@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size) {
-
         return ResponseEntity.ok(hotelService.findAll(page, size));
     }
 
@@ -54,9 +49,8 @@ public class HotelController {
 
     @GetMapping("{id}/amenities")
     ResponseEntity<?> getAmenitiesHotel(@PathVariable Long id) {
-        Hotel hotel = hotelService.findById(id);
-        List<Amenity> amenitieshotel = hotel.getHotelAmenities().stream().map(hotelAmenity -> hotelAmenity.getAmenity()).collect(Collectors.toList());
-        return ResponseEntity.ok(amenitieshotel);
+        List<Amenity> amenities = hotelService.findAmenitiesByHotelId(id);
+        return ResponseEntity.ok(amenities);
     }
 
     @PostMapping
@@ -68,16 +62,19 @@ public class HotelController {
 
     @PostMapping("{id}/rooms")
     public ResponseEntity<?> registerRoom(@PathVariable Long id, @RequestBody RoomRegistrationRequest roomRegistrationRequest) {
-       Room room = roomService.registerRoom(id, roomRegistrationRequest);
+        Room room = roomService.registerRoom(id, roomRegistrationRequest);
         return ResponseEntity
                 .ok(room);
     }
 
-    @PutMapping("{id}")
-    ResponseEntity<?> updateHotel(@RequestBody HotelRegistrationRequest hotelRegistrationRequest, @PathVariable Long id) {
-        Hotel hotel = hotelService.updateHotel(hotelRegistrationRequest, id);
-        return ResponseEntity //
-                .ok(hotel);
+    @PostMapping("{id}/amenities")
+    public ResponseEntity<?> registerAmenity(@PathVariable Long id, @RequestBody AmenityRegistrationRequest amenityRegistrationRequest) {
+        Amenity amenity = amenityService.registerAmenity(amenityRegistrationRequest);
+        HotelAmenityRegistrationRequest request = new HotelAmenityRegistrationRequest(
+                id, amenity.getAmenityId(), amenityRegistrationRequest.chargeable(), amenityRegistrationRequest.amount());
+        hotelAmenityService.registerLink(request);
+        return ResponseEntity
+                .ok(amenity);
     }
 
     @DeleteMapping("{id}")

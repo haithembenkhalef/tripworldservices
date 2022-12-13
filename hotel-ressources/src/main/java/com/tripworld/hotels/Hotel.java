@@ -2,6 +2,7 @@ package com.tripworld.hotels;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tripworld.amenties.hotel.HotelAmenity;
 import com.tripworld.exceptions.validators.TargetNotFound;
 import com.tripworld.rooms.Room;
@@ -45,10 +46,11 @@ public class Hotel {
     private String cityCode;
 
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.REMOVE)
     Set<Room> rooms;
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.REMOVE)
+    @JsonIgnore
     List<HotelAmenity> hotelAmenities;
 
 

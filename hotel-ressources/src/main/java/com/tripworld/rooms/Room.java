@@ -1,13 +1,9 @@
 package com.tripworld.rooms;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tripworld.amenties.hotel.HotelAmenity;
 import com.tripworld.amenties.room.RoomAmenity;
-import com.tripworld.exceptions.validators.TargetNotFound;
 import com.tripworld.hotels.Hotel;
 import lombok.*;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 
 import javax.persistence.*;
@@ -43,7 +39,7 @@ public class Room {
 
     @OneToMany(mappedBy = "amenity")
     @JsonIgnore
-    List<RoomAmenity> Amenities;
+    List<RoomAmenity> amenities;
 
 
 //    public String getHotelName() {

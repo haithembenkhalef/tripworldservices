@@ -35,11 +35,11 @@ public class Amenity {
     @NotNull
     private String shortDesc;
 
-    @OneToMany(mappedBy = "amenity")
+    @OneToMany(mappedBy = "amenity", cascade = CascadeType.REMOVE)
     @JsonIgnore
     List<HotelAmenity> hotelAmenities;
 
-    @OneToMany(mappedBy = "amenity")
+    @OneToMany(mappedBy = "amenity", cascade = CascadeType.REMOVE)
     @JsonIgnore
     List<RoomAmenity> roomAmenities;
 
