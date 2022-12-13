@@ -1,5 +1,7 @@
 package com.tripworld.rooms;
 
 
-public record RoomRegistrationRequest(String description) {
+import javax.validation.constraints.NotNull;
+
+public record RoomRegistrationRequest(@NotNull String description) {
 }

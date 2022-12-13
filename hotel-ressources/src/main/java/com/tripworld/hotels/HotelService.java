@@ -23,6 +23,22 @@ public class HotelService {
         return hotel;
     }
 
+    public List<Hotel> findAll(Optional<Integer> page, Optional<Integer> size) {
+        List<Hotel> hotels = null;
+        if(!page.isPresent() && size.isPresent())
+            hotels =  hotelRepository.findAll(PageRequest.ofSize(size.get())).getContent();
+        else
+        if(size.isPresent())
+            hotels =  hotelRepository.findAll(PageRequest.of(page.get(), size.get())).getContent();
+        else hotels = hotelRepository.findAll();
+
+        return hotels ;
+    }
+
+    public List<?> findAmenitiesByHotelId(Long id) {
+        return hotelRepository.findAmenitiesByHotelId(id);
+    }
+
     public Hotel registerHotel(HotelRegistrationRequest hotelRegistrationRequest) {
         Hotel hotel = Hotel.builder()
                 .hotelName(hotelRegistrationRequest.hotelName())
@@ -33,18 +49,6 @@ public class HotelService {
         return hotelRepository.saveAndFlush(hotel);
     }
 
-
-    public List<Hotel> findAll(Optional<Integer> page, Optional<Integer> size) {
-        List<Hotel> hotels = null;
-        if(!page.isPresent() && size.isPresent())
-            hotels =  hotelRepository.findAll(PageRequest.ofSize(size.get())).getContent();
-        else
-            if(size.isPresent())
-                hotels =  hotelRepository.findAll(PageRequest.of(page.get(), size.get())).getContent();
-            else hotels = hotelRepository.findAll();
-
-        return hotels ;
-    }
 
     public Hotel updateHotel(HotelRegistrationRequest hotelRegistrationRequest, Long id) {
         Hotel hotel = this.findById(id);
@@ -58,8 +62,6 @@ public class HotelService {
         hotelRepository.deleteById(id);
     }
 
-    public List<Amenity> findAmenitiesByHotelId(Long id) {
-        return hotelRepository.findAmenitiesByHotelId(id);
-    }
+
 
 }

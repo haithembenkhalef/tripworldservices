@@ -1,6 +1,8 @@
 package com.tripworld.hotels;
 
-public record HotelRegistrationRequest(String hotelName,
-                                       String description,
-                                       String cityCode) {
+import javax.validation.constraints.NotNull;
+
+public record HotelRegistrationRequest(@NotNull String hotelName,
+                                       @NotNull String description,
+                                       @NotNull String cityCode) {
 }

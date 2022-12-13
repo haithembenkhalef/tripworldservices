@@ -16,7 +16,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     List<Hotel> findByHotelName(@Param("name") String name);
 
-    List<Amenity> findAmenitiesByHotelId(@Param("hotelId") Long id);
+    List<?> findAmenitiesByHotelId(@Param("hotelId") Long id);
 
     List<Room> findAllByHotelId(@Param("hotelId") Long id);
 }

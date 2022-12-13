@@ -7,6 +7,7 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "rooms")
+@NamedQuery(name = "Room.findAmenitiesByRoomId", query = "select ra from RoomAmenity ra inner join  Amenity a on ra.amenity.amenityId = a.amenityId where ra.room.roomId = :roomId")
 public class Room {
     @Id
     @SequenceGenerator(
@@ -29,15 +31,15 @@ public class Room {
     private Long roomId;
 
     @NotNull
+    @NotBlank
     private String description;
 
     @ManyToOne
     @JoinColumn(name="hotel_id")
     @NotNull
-    @JsonIgnore
     private Hotel hotel;
 
-    @OneToMany(mappedBy = "amenity")
+    @OneToMany(mappedBy = "amenity", cascade = CascadeType.REMOVE)
     @JsonIgnore
     List<RoomAmenity> amenities;
 

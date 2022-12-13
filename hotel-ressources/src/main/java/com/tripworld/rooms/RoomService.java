@@ -1,6 +1,7 @@
 package com.tripworld.rooms;
 
 
+import com.tripworld.amenties.Amenity;
 import com.tripworld.exceptions.NoRecordFoundException;
 import com.tripworld.hotels.Hotel;
 import com.tripworld.hotels.HotelRegistrationRequest;
@@ -25,6 +26,14 @@ public class RoomService {
     public Room findById(Long id) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new NoRecordFoundException("Hotel", id));
         return room;
+    }
+
+    public List<Room> findAll() {
+        return roomRepository.findAll();
+    }
+
+    public List<?> findAmenitiesByRoomId(Long id) {
+        return roomRepository.findAmenitiesByRoomId(id);
     }
 
     public Room registerRoom(Long id, RoomRegistrationRequest roomRegistrationRequest) {

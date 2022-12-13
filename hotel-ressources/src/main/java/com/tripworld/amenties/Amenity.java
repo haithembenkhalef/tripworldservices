@@ -6,6 +6,7 @@ import com.tripworld.amenties.room.RoomAmenity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -29,10 +30,12 @@ public class Amenity {
     private Long amenityId;
 
     @NotNull
+    @NotBlank
     private String description;
 
     @Column(name = "short_desc")
     @NotNull
+    @NotBlank
     private String shortDesc;
 
     @OneToMany(mappedBy = "amenity", cascade = CascadeType.REMOVE)

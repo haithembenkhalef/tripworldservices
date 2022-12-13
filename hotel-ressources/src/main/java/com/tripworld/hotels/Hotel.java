@@ -11,6 +11,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "hotels")
-@NamedQuery(name = "Hotel.findAmenitiesByHotelId", query = "select a from Amenity a inner join HotelAmenity ha on ha.amenity.amenityId = a.amenityId where ha.hotel.hotelId = :hotelId")
+@NamedQuery(name = "Hotel.findAmenitiesByHotelId", query = "select ha from HotelAmenity ha inner join  Amenity a on ha.amenity.amenityId = a.amenityId where ha.hotel.hotelId = :hotelId")
 public class Hotel {
     @Id
     @SequenceGenerator(
@@ -36,17 +37,20 @@ public class Hotel {
     private Long hotelId;
 
     @NotNull
+    @NotBlank
     private String hotelName;
 
     @NotNull
+    @NotBlank
     private String description;
 
     @NotNull
-    @Size(max = 23)
+    @Size(max = 5)
     private String cityCode;
 
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.REMOVE)
+    @JsonIgnore
     Set<Room> rooms;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.REMOVE)

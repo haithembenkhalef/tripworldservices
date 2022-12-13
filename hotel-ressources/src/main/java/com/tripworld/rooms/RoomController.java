@@ -1,10 +1,21 @@
 package com.tripworld.rooms;
 
 
+import com.tripworld.Utility;
+import com.tripworld.amenties.Amenity;
+import com.tripworld.amenties.AmenityRegistrationRequest;
+import com.tripworld.amenties.AmenityService;
+import com.tripworld.amenties.hotel.HotelAmenityRegistrationRequest;
+import com.tripworld.amenties.room.RoomAmenityRegistrationRequest;
+import com.tripworld.amenties.room.RoomAmenityService;
+import com.tripworld.hotels.Hotel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -14,10 +25,44 @@ public class RoomController {
 
     private final RoomService roomService;
 
+    private final AmenityService amenityService;
+
+    private final RoomAmenityService roomAmenityService;
+
+
+    @GetMapping
+    public ResponseEntity<?> getRooms() {
+        return ResponseEntity.ok(roomService.findAll());
+    }
+
     @GetMapping("{id}")
     ResponseEntity<?> getRoom(@PathVariable Long id) {
         Room room = roomService.findById(id);
         return ResponseEntity.ok(room);
+    }
+
+    @GetMapping("{id}/amenities")
+    ResponseEntity<?> getAmenitiesRoom(@PathVariable Long id) {
+        List<?> amenities = roomService.findAmenitiesByRoomId(id);
+        return ResponseEntity.ok(amenities);
+    }
+
+    @GetMapping("{id}/amenities/{amenityId}")
+    ResponseEntity<?> geAmenityRoomById(@PathVariable Long id, @PathVariable Long amenityId) {
+        Room room = roomService.findById(id);
+        return ResponseEntity.ok(room.getAmenities().stream()
+                .filter(roomAmenity -> roomAmenity.getAmenity().getAmenityId().equals(amenityId))
+                .collect(Utility.toSingleton()));
+    }
+
+    @PostMapping("{id}/amenities")
+    public ResponseEntity<?> registerAmenity(@PathVariable Long id, @RequestBody AmenityRegistrationRequest amenityRegistrationRequest) {
+        Amenity amenity = amenityService.registerAmenity(amenityRegistrationRequest);
+        RoomAmenityRegistrationRequest request = new RoomAmenityRegistrationRequest(
+                id, amenity.getAmenityId(), amenityRegistrationRequest.chargeable(), amenityRegistrationRequest.amount());
+        roomAmenityService.registerLink(request);
+        return ResponseEntity
+                .ok(amenity);
     }
 
     @DeleteMapping("{id}")

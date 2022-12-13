@@ -1,5 +1,6 @@
 package com.tripworld.hotels;
 
+import com.tripworld.Utility;
 import com.tripworld.amenties.Amenity;
 import com.tripworld.amenties.AmenityRegistrationRequest;
 import com.tripworld.amenties.AmenityService;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -47,10 +49,26 @@ public class HotelController {
         return ResponseEntity.ok(hotel.getRooms());
     }
 
+    @GetMapping("{id}/rooms/{roomId}")
+    ResponseEntity<?> getRoomHotelById(@PathVariable Long id, @PathVariable Long roomId) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getRooms().stream()
+                .filter(room -> room.getRoomId().equals(roomId))
+                .collect(Utility.toSingleton()));
+    }
+
     @GetMapping("{id}/amenities")
     ResponseEntity<?> getAmenitiesHotel(@PathVariable Long id) {
-        List<Amenity> amenities = hotelService.findAmenitiesByHotelId(id);
+        List<?> amenities = hotelService.findAmenitiesByHotelId(id);
         return ResponseEntity.ok(amenities);
+    }
+
+    @GetMapping("{id}/amenities/{amenityId}")
+    ResponseEntity<?> geAmenityHotelById(@PathVariable Long id, @PathVariable Long amenityId) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getHotelAmenities().stream()
+                .filter(hotelAmenity -> hotelAmenity.getAmenity().getAmenityId().equals(amenityId))
+                .collect(Utility.toSingleton()));
     }
 
     @PostMapping
