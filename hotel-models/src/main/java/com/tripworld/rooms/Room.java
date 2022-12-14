@@ -1,9 +1,11 @@
 package com.tripworld.rooms;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tripworld.rating.Rating;
 import com.tripworld.amenities.room.RoomAmenity;
 import com.tripworld.hotels.Hotel;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -40,10 +42,15 @@ public class Room {
 
     @OneToMany(mappedBy = "amenity", cascade = CascadeType.REMOVE)
     @JsonIgnore
+    @ToString.Exclude
     List<RoomAmenity> amenities;
 
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    @ToString.Exclude
+    List<Rating> rating;
 
-//    public String getHotelName() {
-//        return this.hotel.getHotelName();
-//    }
+    @Formula(value = "(select avg(ra.value) from ratings ra where ra.room_id = room_id)")
+    private Double ratingValue;
+
 }

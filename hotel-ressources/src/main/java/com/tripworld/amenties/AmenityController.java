@@ -21,12 +21,13 @@ public class AmenityController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getAmenitiesById(Long id) {
+    public ResponseEntity<?> getAmenitiesById(@PathVariable Long id) {
         return ResponseEntity.ok(amenityService.findById(id));
     }
+
     @PostMapping
     public ResponseEntity<?> registerAmenity(@RequestBody AmenityRegistrationRequest amenityRegistrationRequest) {
-      return ResponseEntity.ok(amenityService.registerAmenity(amenityRegistrationRequest));
+        return ResponseEntity.ok(amenityService.registerAmenity(amenityRegistrationRequest));
     }
 
     @DeleteMapping("{id}")

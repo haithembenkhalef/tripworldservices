@@ -1,20 +1,22 @@
 package com.tripworld.hotels;
 
-import com.tripworld.utility.Utility;
 import com.tripworld.amenities.Amenity;
 import com.tripworld.amenities.AmenityRegistrationRequest;
-import com.tripworld.amenties.AmenityService;
 import com.tripworld.amenities.hotel.HotelAmenityRegistrationRequest;
+import com.tripworld.amenties.AmenityService;
 import com.tripworld.amenties.hotel.HotelAmenityService;
 import com.tripworld.rooms.Room;
 import com.tripworld.rooms.RoomRegistrationRequest;
 import com.tripworld.rooms.RoomService;
+import com.tripworld.utility.Utility;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -56,6 +58,14 @@ public class HotelController {
                 .collect(Utility.toSingleton()));
     }
 
+    @GetMapping("{id}/rooms/{roomId}/rating")
+    ResponseEntity<?> getRoomHotelRatingById(@PathVariable Long id, @PathVariable Long roomId) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getRooms().stream()
+                .filter(room -> room.getRoomId().equals(roomId))
+                .collect(Utility.toSingleton()));
+    }
+
     @GetMapping("{id}/amenities")
     ResponseEntity<?> getAmenitiesHotel(@PathVariable Long id) {
         List<?> amenities = hotelService.findAmenitiesByHotelId(id);
@@ -78,6 +88,18 @@ public class HotelController {
     @GetMapping("/search/findHotelByCityCode/{cityCode}")
     ResponseEntity<?> getHotelByCityCode(@PathVariable String cityCode) {
         return ResponseEntity.ok(hotelService.findByCityCode(cityCode));
+    }
+
+    @GetMapping("{id}/search/rooms/findRoomByDesc/{desc}")
+    ResponseEntity<?> getRoomByDesc(@PathVariable Long id, @PathVariable String desc) {
+        return ResponseEntity.ok(roomService.findAllByDesc(id, desc));
+    }
+
+    @GetMapping("{id}/search/amenities/filterAmenities")
+    ResponseEntity<?> getRoomByDesc(@PathVariable Long id, @RequestParam boolean chargable) {
+        return ResponseEntity.ok(hotelService.findAmenitiesByHotelId(id).stream()
+                .filter(hotelAmenity -> hotelAmenity.isChargeable() == chargable)
+                .collect(Collectors.toList()));
     }
 
     @PostMapping

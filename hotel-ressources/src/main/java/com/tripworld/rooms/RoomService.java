@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,6 +27,12 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
+    public List<Room> findAllByDesc(Long id, String desc) {
+       return this.findAll().stream().
+               filter(room -> room.getDescription().contains(desc) && room.getHotel().getHotelId().equals(id)).
+               collect(Collectors.toList());
+    }
+
     public List<?> findAmenitiesByRoomId(Long id) {
         return roomRepository.findAmenitiesByRoomId(id);
     }
@@ -38,7 +45,6 @@ public class RoomService {
         log.info("Room saved {}", room);
         return roomRepository.saveAndFlush(room);
     }
-
 
     public void deleteRoomByID(Long id) {
         if(roomRepository.existsById(id)) roomRepository.deleteById(id);

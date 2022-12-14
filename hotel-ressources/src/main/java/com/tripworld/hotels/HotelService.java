@@ -1,6 +1,7 @@
 package com.tripworld.hotels;
 
 
+import com.tripworld.amenities.hotel.HotelAmenity;
 import com.tripworld.exceptions.NoRecordFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class HotelService {
         return hotels ;
     }
 
-    public List<?> findAmenitiesByHotelId(Long id) {
+    public List<HotelAmenity> findAmenitiesByHotelId(Long id) {
         return hotelRepository.findAmenitiesByHotelId(id);
     }
 

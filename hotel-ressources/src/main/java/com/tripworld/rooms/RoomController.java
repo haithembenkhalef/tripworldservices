@@ -1,6 +1,8 @@
 package com.tripworld.rooms;
 
 
+import com.tripworld.rating.RatingRequest;
+import com.tripworld.rating.RatingService;
 import com.tripworld.utility.Utility;
 import com.tripworld.amenities.Amenity;
 import com.tripworld.amenities.AmenityRegistrationRequest;
@@ -12,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -25,6 +28,8 @@ public class RoomController {
     private final AmenityService amenityService;
 
     private final RoomAmenityService roomAmenityService;
+
+    private final RatingService ratingService;
 
 
     @GetMapping
@@ -60,6 +65,12 @@ public class RoomController {
         roomAmenityService.registerLink(request);
         return ResponseEntity
                 .ok(amenity);
+    }
+
+    @PostMapping("{id}/rating")
+    public ResponseEntity<?> rateRoom(@PathVariable Long id, @RequestBody RatingRequest ratingRequest) {
+        return ResponseEntity
+                .ok(ratingService.rateRoom(id, ratingRequest));
     }
 
     @DeleteMapping("{id}")
