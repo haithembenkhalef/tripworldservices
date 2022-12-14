@@ -10,7 +10,7 @@ docker compose up -d
 
 Reload maven project in case of any dependency issue and clean goal.
 
-Launch hotel-batch module for executing the batch program.
+Launch hotel-batch module for executing the batch program, it will start and shutdown right after, you will see a completed or failed message in the console.
 
 Launch hotel-resources module for the api.
 
