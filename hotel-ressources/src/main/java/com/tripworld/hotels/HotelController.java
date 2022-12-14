@@ -1,79 +1,136 @@
-/*
 package com.tripworld.hotels;
 
+import com.tripworld.amenities.Amenity;
+import com.tripworld.amenities.AmenityRegistrationRequest;
+import com.tripworld.amenities.hotel.HotelAmenityRegistrationRequest;
+import com.tripworld.amenties.AmenityService;
+import com.tripworld.amenties.hotel.HotelAmenityService;
+import com.tripworld.rooms.Room;
+import com.tripworld.rooms.RoomRegistrationRequest;
+import com.tripworld.rooms.RoomService;
+import com.tripworld.utility.Utility;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.server.core.EmbeddedWrapper;
-import org.springframework.hateoas.server.core.EmbeddedWrappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/hotels")
 public class HotelController {
 
     private final HotelService hotelService;
 
-    private final HotelAssembler hotelAssembler;
+    private final RoomService roomService;
 
-    @GetMapping("/api/v1/hotels")
-    public ResponseEntity<?> getHotels() {
-        List<Hotel> hotels = hotelService.findAll();
-        if(hotels.isEmpty()) {
-            EmbeddedWrapper wrapper = new EmbeddedWrappers(false).emptyCollectionOf(Hotel.class);
-            return ResponseEntity.ok(CollectionModel.of(Arrays.asList(wrapper),
-                    linkTo(methodOn(HotelController.class).getHotels()).withSelfRel()));
-        }
-        List<EntityModel<Hotel>> hotelsEntity = hotelService.findAll().stream()
-                .map(hotel -> hotelAssembler.toModel(hotel))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(CollectionModel.of(hotelsEntity,
-                linkTo(methodOn(HotelController.class).getHotels())
-                        .withSelfRel()));
+    private final AmenityService amenityService;
+
+    private final HotelAmenityService hotelAmenityService;
+
+    @GetMapping
+    public ResponseEntity<?> getHotels(@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size) {
+        return ResponseEntity.ok(hotelService.findAll(page, size));
     }
 
-    @GetMapping("/api/v1/hotels/{id}")
-    ResponseEntity<EntityModel<Hotel>> getHotel(@PathVariable Long id) {
+    @GetMapping("{id}")
+    ResponseEntity<?> getHotel(@PathVariable Long id) {
         Hotel hotel = hotelService.findById(id);
-        return ResponseEntity.ok(hotelAssembler.toModel(hotel));
+        return ResponseEntity.ok(hotel);
     }
 
-    @PostMapping("/api/v1/hotels")
+    @GetMapping("{id}/rooms")
+    ResponseEntity<?> getRoomsHotel(@PathVariable Long id) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getRooms());
+    }
+
+    @GetMapping("{id}/rooms/{roomId}")
+    ResponseEntity<?> getRoomHotelById(@PathVariable Long id, @PathVariable Long roomId) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getRooms().stream()
+                .filter(room -> room.getRoomId().equals(roomId))
+                .collect(Utility.toSingleton()));
+    }
+
+    @GetMapping("{id}/rooms/{roomId}/rating")
+    ResponseEntity<?> getRoomHotelRatingById(@PathVariable Long id, @PathVariable Long roomId) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getRooms().stream()
+                .filter(room -> room.getRoomId().equals(roomId))
+                .collect(Utility.toSingleton()));
+    }
+
+    @GetMapping("{id}/amenities")
+    ResponseEntity<?> getAmenitiesHotel(@PathVariable Long id) {
+        List<?> amenities = hotelService.findAmenitiesByHotelId(id);
+        return ResponseEntity.ok(amenities);
+    }
+
+    @GetMapping("{id}/amenities/{amenityId}")
+    ResponseEntity<?> geAmenityHotelById(@PathVariable Long id, @PathVariable Long amenityId) {
+        Hotel hotel = hotelService.findById(id);
+        return ResponseEntity.ok(hotel.getHotelAmenities().stream()
+                .filter(hotelAmenity -> hotelAmenity.getAmenity().getAmenityId().equals(amenityId))
+                .collect(Utility.toSingleton()));
+    }
+
+    @GetMapping("/search/findHotelByName/{name}")
+    ResponseEntity<?> getHotelByName(@PathVariable String name) {
+        return ResponseEntity.ok(hotelService.findByName(name));
+    }
+
+    @GetMapping("/search/findHotelByCityCode/{cityCode}")
+    ResponseEntity<?> getHotelByCityCode(@PathVariable String cityCode) {
+        return ResponseEntity.ok(hotelService.findByCityCode(cityCode));
+    }
+
+    @GetMapping("{id}/search/rooms/findRoomByDesc/{desc}")
+    ResponseEntity<?> getRoomByDesc(@PathVariable Long id, @PathVariable String desc) {
+        return ResponseEntity.ok(roomService.findAllByDesc(id, desc));
+    }
+
+    @GetMapping("{id}/search/amenities/filterAmenities")
+    ResponseEntity<?> getRoomByDesc(@PathVariable Long id, @RequestParam boolean chargable) {
+        return ResponseEntity.ok(hotelService.findAmenitiesByHotelId(id).stream()
+                .filter(hotelAmenity -> hotelAmenity.isChargeable() == chargable)
+                .collect(Collectors.toList()));
+    }
+
+    @PostMapping
     public ResponseEntity<?> registerHotel(@RequestBody HotelRegistrationRequest hotelRegistrationRequest) {
-        EntityModel<Hotel> entityModel = hotelAssembler.toModel(hotelService.registerHotel(hotelRegistrationRequest));
+        Hotel hotel = hotelService.registerHotel(hotelRegistrationRequest);
         return ResponseEntity
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
-                .body(entityModel);
+                .ok(hotel);
     }
 
-    @PutMapping("/api/v1/hotels/{id}")
-    ResponseEntity<?> updateHotel(@RequestBody HotelRegistrationRequest hotelRegistrationRequest, @PathVariable Long id) {
-        EntityModel<Hotel> entityModel = hotelAssembler.toModel(hotelService.updateHotel(hotelRegistrationRequest, id));
-        return ResponseEntity //
-                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
-                .body(entityModel);
+    @PostMapping("{id}/rooms")
+    public ResponseEntity<?> registerRoom(@PathVariable Long id, @RequestBody RoomRegistrationRequest roomRegistrationRequest) {
+        Room room = roomService.registerRoom(id, roomRegistrationRequest);
+        return ResponseEntity
+                .ok(room);
     }
 
-    @DeleteMapping("/api/v1/hotels/{id}")
+    @PostMapping("{id}/amenities")
+    public ResponseEntity<?> registerAmenity(@PathVariable Long id, @RequestBody AmenityRegistrationRequest amenityRegistrationRequest) {
+        Amenity amenity = amenityService.registerAmenity(amenityRegistrationRequest);
+        HotelAmenityRegistrationRequest request = new HotelAmenityRegistrationRequest(
+                id, amenity.getAmenityId(), amenityRegistrationRequest.chargeable(), amenityRegistrationRequest.amount());
+        hotelAmenityService.registerLink(request);
+        return ResponseEntity
+                .ok(amenity);
+    }
+
+    @DeleteMapping("{id}")
     ResponseEntity<?> deleteHotel(@PathVariable Long id) {
         hotelService.deleteHotelBy(id);
         return ResponseEntity.noContent().build();
     }
 
 
-
 }
-*/

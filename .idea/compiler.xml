@@ -6,7 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="hotel-models" />
         <module name="hotel-ressources" />
+        <module name="hotel-batch" />
       </profile>
     </annotationProcessing>
   </component>
