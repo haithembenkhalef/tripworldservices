@@ -24,8 +24,20 @@ public class HotelAmenityController {
     }
 
     @DeleteMapping("{id}")
-    ResponseEntity<?> deleteHotel(@PathVariable Long id) {
+    ResponseEntity<?> deleteLink(@PathVariable Long id) {
         hotelAmenityService.deleteHotelAmenityById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{id}")
+    ResponseEntity<?> deleteLinkByHotelId(@PathVariable Long id) {
+        hotelAmenityService.deleteHotelAmenityByHotelId(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{id}")
+    ResponseEntity<?> deleteLinkByAmenityId(@PathVariable Long id) {
+        hotelAmenityService.deleteHotelAmenityByRoomId(id);
         return ResponseEntity.noContent().build();
     }
 

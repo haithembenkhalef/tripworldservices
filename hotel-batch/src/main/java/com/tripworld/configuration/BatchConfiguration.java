@@ -90,7 +90,11 @@ public class BatchConfiguration {
     public ItemWriter<Room> writerRoom(){
         return rooms -> {
             System.out.println("Saving rooms Records: " +rooms);
-            roomRepository.saveAll(rooms);
+            try {
+                roomRepository.saveAll(rooms);
+            }catch(Exception e) {
+
+            }
         };
     }
 

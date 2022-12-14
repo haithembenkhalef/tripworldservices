@@ -37,4 +37,13 @@ public class HotelAmenityService {
         if(hotelAmenityRepository.existsById(id)) hotelAmenityRepository.deleteById(id);
         else throw new NoRecordFoundException("HotelAmenity", id);
     }
+
+    public void deleteHotelAmenityByHotelId(Long id) {
+        if(hotelAmenityRepository.existsByHotel_HotelId(id)) hotelAmenityRepository.deleteByHotel_HotelId(id);
+        else throw new NoRecordFoundException("HotelAmenity", id);
+    }
+    public void deleteHotelAmenityByRoomId(Long id) {
+        if(hotelAmenityRepository.existsByAmenity_AmenityId(id)) hotelAmenityRepository.deleteByAmenity_AmenityId(id);
+        else throw new NoRecordFoundException("HotelAmenity", id);
+    }
 }

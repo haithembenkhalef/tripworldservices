@@ -1,5 +1,6 @@
 package com.tripworld.processors;
 
+import com.tripworld.exceptions.NoRecordFoundException;
 import com.tripworld.hotels.HotelRepository;
 import com.tripworld.pojo.RoomPojo;
 import com.tripworld.rooms.Room;
@@ -15,9 +16,11 @@ public class RoomItemProcessor implements ItemProcessor<RoomPojo, Room> {
 
     @Override
     public Room process(RoomPojo roomPojo) throws Exception {
-        return Room.builder()
-                .hotel(hotelRepository.getById(roomPojo.getHotelId()))
-                .description(roomPojo.getDescription())
-                .build();
+        if(hotelRepository.existsById(roomPojo.getHotelId()))
+            return Room.builder()
+                    .hotel(hotelRepository.getById(roomPojo.getHotelId()))
+                    .description(roomPojo.getDescription())
+                    .build();
+        else throw new NoRecordFoundException("Hotel", roomPojo.getHotelId());
     }
 }

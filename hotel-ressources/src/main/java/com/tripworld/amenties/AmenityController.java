@@ -35,4 +35,5 @@ public class AmenityController {
         amenityService.deleteAmenityById(id);
         return ResponseEntity.noContent().build();
     }
+
 }
