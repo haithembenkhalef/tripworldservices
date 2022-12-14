@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/hotel-amenities")
+@RequestMapping("/api/v1/hotelAmenities")
 public class HotelAmenityController {
 
     private final HotelAmenityService hotelAmenityService;
@@ -29,13 +29,13 @@ public class HotelAmenityController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}/hotel")
     ResponseEntity<?> deleteLinkByHotelId(@PathVariable Long id) {
         hotelAmenityService.deleteHotelAmenityByHotelId(id);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("{id}/amenity")
     ResponseEntity<?> deleteLinkByAmenityId(@PathVariable Long id) {
         hotelAmenityService.deleteHotelAmenityByRoomId(id);
         return ResponseEntity.noContent().build();

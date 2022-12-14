@@ -51,6 +51,6 @@ public class Room {
     List<Rating> rating;
 
     @Formula(value = "(select avg(ra.value) from ratings ra where ra.room_id = room_id)")
-    private Double ratingValue;
+    private Double ratingValue = Double.valueOf(0);
 
 }
