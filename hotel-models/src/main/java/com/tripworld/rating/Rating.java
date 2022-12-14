@@ -4,9 +4,11 @@ package com.tripworld.rating;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tripworld.rooms.Room;
 import lombok.*;
-import org.apache.tomcat.jni.Address;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -28,7 +30,10 @@ public class Rating {
     )
     private Long ratingId;
 
-    private int value;
+    @NotNull
+    @Min(1)
+    @Max(5)
+    private int value = 1;
 
     @ManyToOne
     @JoinColumn(name = "room_id")

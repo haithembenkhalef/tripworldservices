@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: hotel
+  datasource:
+    password: password
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/hotel-resources
+    username: tripworld
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    rest:
+      basePath: /api/v1
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: true
+    show-sql: true
